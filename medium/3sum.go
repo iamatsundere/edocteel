@@ -6,35 +6,30 @@ import (
 )
 
 func threeSum(nums []int) [][]int {
-	numsx := make([]int, 0)
 	l := len(nums)
+	sort.Ints(nums)
 	ret := make([][]int, 0)
-	setNums := make(map[int]bool)
-	for i := range nums {
-		if _, ok := setNums[nums[i]]; !ok {
-			numsx = append(numsx, nums[i])
-			setNums[nums[i]] = true
-		}
-	}
+	set := make(map[string]bool)
 
-	for len(numsx) < l {
-		numsx = append(numsx, numsx[0])
-	}
-
-	setSlice := make(map[string]bool)
 	if l >= 3 {
-		for i := 0; i < l; i++ {
-			for j := i + 1; j < l; j++ {
-				for k := j + 1; k < l; k++ {
-					if numsx[i]+numsx[j]+numsx[k] == 0 {
-						tmp := []int{numsx[i], numsx[j], numsx[k]}
-						sort.Ints(tmp)
-						key := fmt.Sprintf("%d_%d_%d", tmp[0], tmp[1], tmp[2])
-						if _, ok := setSlice[key]; !ok {
-							setSlice[key] = true
-							ret = append(ret, tmp)
-						}
+		for i := range nums {
+			j := i + 1
+			k := len(nums) - 1
+
+			for j < k {
+				tot := nums[i] + nums[j] + nums[k]
+				if tot == 0 {
+					key := fmt.Sprintf("%d_%d_%d", nums[i], nums[j], nums[k])
+					if _, ok := set[key]; !ok {
+						ret = append(ret, []int{nums[i], nums[j], nums[k]})
+						set[key] = true
 					}
+					j++
+					k--
+				} else if tot < 0 {
+					j++
+				} else {
+					k--
 				}
 			}
 		}
